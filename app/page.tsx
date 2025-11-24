@@ -135,11 +135,10 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <main className="flex-1 w-full bg-zinc-100 pb-28">
         <h1 className="text-center text-3xl pt-12 pb-4">
-          Créer un certificat d&apos;engagement
+          Recevoir son certificat d&apos;engagement
         </h1>
         <p className="text-center text-zinc-600">
-          Remplissez les champs suivants pour créer et recevoir un certificat à
-          partager
+          Remplissez les champs suivants pour recevoir votre certificat
         </p>
         <div className="flex flex-row pt-8 h-full px-8 gap-8 min-h-[700px]">
           <div
