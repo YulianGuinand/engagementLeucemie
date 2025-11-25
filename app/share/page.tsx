@@ -10,13 +10,21 @@ export default async function SharePage({
   const pseudo = params.pseudo || "Nouveau membre";
   const imageParam = params.image;
 
+  // Si c'est une URL UploadThing (utfs.io ou ufs.sh), l'utiliser telle quelle
+  // Sinon, extraire le pathname pour les images localhost
   let imageSrc = imageParam;
   if (imageParam && typeof imageParam === "string") {
-    try {
-      const url = new URL(imageParam);
-      imageSrc = url.pathname;
-    } catch {
+    // Si c'est une URL UploadThing, l'utiliser directement
+    if (imageParam.includes("utfs.io") || imageParam.includes("ufs.sh")) {
       imageSrc = imageParam;
+    } else {
+      // Pour les URLs localhost, extraire le pathname
+      try {
+        const url = new URL(imageParam);
+        imageSrc = url.pathname;
+      } catch {
+        imageSrc = imageParam;
+      }
     }
   }
 

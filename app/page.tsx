@@ -28,7 +28,7 @@ export default function Home() {
     e.preventDefault();
 
     if (!email) {
-      setStatus("❌ Veuillez entrer votre email");
+      setStatus("Veuillez entrer votre email");
       setTimeout(() => setStatus(null), 3000);
       return;
     }
@@ -49,7 +49,7 @@ export default function Home() {
     }
 
     if (!imageDataUrl) {
-      setStatus("❌ Erreur lors de la génération");
+      setStatus("Erreur lors de la génération");
       setTimeout(() => setStatus(null), 3000);
       return;
     }
@@ -72,9 +72,21 @@ export default function Home() {
       if (saveResponse.ok) {
         const saveData = await saveResponse.json();
         certificatePath = saveData.path;
+        console.log("Certificat sauvegardé avec le chemin:", certificatePath);
+      } else {
+        console.error(
+          "Erreur réponse API save-certificate:",
+          await saveResponse.text()
+        );
       }
     } catch (error) {
       console.error("Erreur lors de la sauvegarde du certificat:", error);
+    }
+
+    if (!certificatePath) {
+      console.warn(
+        "⚠️ Aucun chemin de certificat - l'email sera envoyé sans lien de partage personnalisé"
+      );
     }
 
     setStatus("📧 Envoi de l'email...");

@@ -6,6 +6,8 @@ export async function POST(request: NextRequest) {
     const { email, pseudo, imageDataUrl, certificatePath } =
       await request.json();
 
+    console.log("📧 Email API - certificatePath reçu:", certificatePath);
+
     if (!email || !imageDataUrl) {
       return NextResponse.json(
         { error: "Email et image requis" },
@@ -124,7 +126,7 @@ export async function POST(request: NextRequest) {
                       <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
                         `https://engagement-leucemie.vercel.app/share?pseudo=${
                           pseudo || "Nouveau membre"
-                        }&image=https://engagement-leucemie.vercel.app${certificatePath}`
+                        }&image=${certificatePath}`
                       )}" style="display: inline-block; margin: 5px; padding: 14px 24px; background-color: #1877f2; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="vertical-align: middle; margin-right: 8px;" viewBox="0 0 16 16">
                           <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>

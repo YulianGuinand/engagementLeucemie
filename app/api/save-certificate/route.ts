@@ -1,6 +1,7 @@
-import { writeFile } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
-import { join } from "path";
+import { UTApi } from "uploadthing/server";
+
+const utapi = new UTApi();
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,19 +27,26 @@ export async function POST(request: NextRequest) {
     const base64Data = imageDataUrl.replace(/^data:image\/\w+;base64,/, "");
     const imageBuffer = Buffer.from(base64Data, "base64");
 
-    // Chemin absolu vers le dossier public/certificates
-    const publicDir = join(process.cwd(), "public", "certificates");
-    const filePath = join(publicDir, filename);
+    // Convertir le buffer en File pour UploadThing
+    const file = new File([imageBuffer], filename, { type: "image/png" });
 
-    // Sauvegarder le fichier
-    await writeFile(filePath, imageBuffer);
+    // Uploader vers UploadThing
+    const uploadResponse = await utapi.uploadFiles(file);
 
-    // Retourner le chemin public relatif
-    const publicPath = `/certificates/${filename}`;
+    if (uploadResponse.error) {
+      console.error("Erreur UploadThing:", uploadResponse.error);
+      return NextResponse.json(
+        { error: "Erreur lors de l'upload du certificat" },
+        { status: 500 }
+      );
+    }
+
+    // Retourner l'URL publique du certificat
+    const publicUrl = uploadResponse.data?.url;
 
     return NextResponse.json({
       success: true,
-      path: publicPath,
+      path: publicUrl, // URL complète de UploadThing
       filename: filename,
     });
   } catch (error) {
