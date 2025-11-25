@@ -3,7 +3,7 @@
 import Button from "@/components/Button";
 import Footer from "@/components/Footer";
 import Preview, { PreviewRef } from "@/components/Preview";
-import { Download, Palette, Share2, Upload } from "lucide-react";
+import { Palette, Upload } from "lucide-react";
 import { useRef, useState } from "react";
 import { ChromePicker } from "react-color";
 
@@ -18,7 +18,6 @@ export default function Home() {
   const [description, setDescription] = useState<string>("");
   const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
   const [certificateColor, setCertificateColor] = useState<string>("#10b981");
-  const [showSocialShare, setShowSocialShare] = useState<boolean>(false);
   const [certificateDataUrl, setCertificateDataUrl] = useState<string | null>(
     null
   );
@@ -107,7 +106,6 @@ export default function Home() {
 
       if (response.ok) {
         setStatus("Certificat envoyé par email !");
-        setShowSocialShare(true);
         setTimeout(() => setStatus(null), 5000);
       } else {
         setStatus("Erreur lors de l'envoi");
@@ -350,66 +348,6 @@ export default function Home() {
               >
                 {status || "Obtenir son certificat"}
               </button>
-
-              {/* Section de partage social */}
-              {showSocialShare && (
-                <div className="mt-6 p-6 bg-linear-to-br from-yellow-50 to-amber-50 rounded-2xl border-2 border-yellow-200 shadow-md">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Share2 className="w-5 h-5 text-amber-700" />
-                    <h3 className="text-lg font-bold text-amber-900">
-                      🌟 Partagez votre engagement !
-                    </h3>
-                  </div>
-
-                  <p className="text-sm text-amber-800 mb-4">
-                    Vous aussi vous pouvez nous aider à sensibiliser en publiant
-                    sur vos réseaux
-                  </p>
-
-                  {/* Bouton de téléchargement */}
-                  <button
-                    type="button"
-                    onClick={handleDownloadCertificate}
-                    className="w-full py-3 px-4 mb-3 rounded-full bg-white border-2 border-amber-300 hover:border-amber-400 hover:bg-amber-50 transition-colors text-amber-900 font-semibold flex items-center justify-center gap-2 shadow-sm"
-                  >
-                    <Download className="w-5 h-5" />
-                    Télécharger mon certificat
-                  </button>
-
-                  <div className="space-y-2">
-                    {/* Bouton Facebook */}
-                    <button
-                      type="button"
-                      onClick={handleShareFacebook}
-                      className="w-full py-3 px-4 rounded-full bg-[#1877f2] hover:bg-[#0c63d4] transition-colors text-white font-semibold shadow-sm"
-                    >
-                      📘 Partager sur Facebook
-                    </button>
-
-                    {/* Bouton LinkedIn */}
-                    <button
-                      type="button"
-                      onClick={handleShareLinkedIn}
-                      className="w-full py-3 px-4 rounded-full bg-[#0077b5] hover:bg-[#006399] transition-colors text-white font-semibold shadow-sm"
-                    >
-                      💼 Partager sur LinkedIn
-                    </button>
-
-                    {/* Bouton Instagram */}
-                    <button
-                      type="button"
-                      onClick={handleShareInstagram}
-                      className="w-full py-3 px-4 rounded-full bg-linear-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 transition-colors text-white font-semibold shadow-sm"
-                    >
-                      📸 Publier sur Instagram
-                    </button>
-                  </div>
-
-                  <p className="text-xs text-amber-700 mt-4 text-center italic">
-                    Utilisez le hashtag #EngagementLeucémie
-                  </p>
-                </div>
-              )}
             </form>
           </div>
 
