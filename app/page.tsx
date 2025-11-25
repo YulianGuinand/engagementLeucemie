@@ -3,7 +3,7 @@
 import Button from "@/components/Button";
 import Footer from "@/components/Footer";
 import Preview, { PreviewRef } from "@/components/Preview";
-import { Palette, Upload } from "lucide-react";
+import { Download, Palette, Share2, Upload } from "lucide-react";
 import { useRef, useState } from "react";
 import { ChromePicker } from "react-color";
 
@@ -18,6 +18,10 @@ export default function Home() {
   const [description, setDescription] = useState<string>("");
   const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
   const [certificateColor, setCertificateColor] = useState<string>("#10b981");
+  const [showSocialShare, setShowSocialShare] = useState<boolean>(false);
+  const [certificateDataUrl, setCertificateDataUrl] = useState<string | null>(
+    null
+  );
   const previewRef = useRef<PreviewRef>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -50,9 +54,31 @@ export default function Home() {
       return;
     }
 
+    setCertificateDataUrl(imageDataUrl);
+
+    let certificatePath = "";
+    try {
+      const saveResponse = await fetch("/api/save-certificate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          imageDataUrl,
+          pseudo,
+        }),
+      });
+
+      if (saveResponse.ok) {
+        const saveData = await saveResponse.json();
+        certificatePath = saveData.path;
+      }
+    } catch (error) {
+      console.error("Erreur lors de la sauvegarde du certificat:", error);
+    }
+
     setStatus("📧 Envoi de l'email...");
 
-    // Envoyer par email
     try {
       const response = await fetch("/api/send-certificate", {
         method: "POST",
@@ -63,19 +89,21 @@ export default function Home() {
           email,
           pseudo,
           imageDataUrl,
+          certificatePath,
         }),
       });
 
       if (response.ok) {
-        setStatus("✅ Certificat envoyé par email !");
+        setStatus("Certificat envoyé par email !");
+        setShowSocialShare(true);
         setTimeout(() => setStatus(null), 5000);
       } else {
-        setStatus("❌ Erreur lors de l'envoi");
+        setStatus("Erreur lors de l'envoi");
         setTimeout(() => setStatus(null), 3000);
       }
     } catch (error) {
       console.error("Erreur:", error);
-      setStatus("❌ Erreur lors de l'envoi");
+      setStatus("Erreur lors de l'envoi");
       setTimeout(() => setStatus(null), 3000);
     }
   };
@@ -129,6 +157,40 @@ export default function Home() {
   const removeImage = () => {
     setSelectedImage(null);
     setImagePreviewUrl(null);
+  };
+
+  const handleDownloadCertificate = () => {
+    if (certificateDataUrl) {
+      const link = document.createElement("a");
+      link.download = `certificat-engagement-${pseudo || "leucemie"}.png`;
+      link.href = certificateDataUrl;
+      link.click();
+    }
+  };
+
+  const handleShareFacebook = () => {
+    const url = "https://engagement-leucemie.com";
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      url
+    )}`;
+    window.open(facebookUrl, "_blank", "width=600,height=400");
+  };
+
+  const handleShareLinkedIn = () => {
+    const url = "https://engagement-leucemie.com";
+    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+      url
+    )}`;
+    window.open(linkedInUrl, "_blank", "width=600,height=400");
+  };
+
+  const handleShareInstagram = () => {
+    // Instagram ne permet pas de partage direct via URL
+    // On télécharge l'image et on informe l'utilisateur
+    handleDownloadCertificate();
+    alert(
+      "📸 Votre certificat a été téléchargé ! Vous pouvez maintenant le publier sur Instagram avec #EngagementLeucémie"
+    );
   };
 
   return (
@@ -276,6 +338,66 @@ export default function Home() {
               >
                 {status || "Obtenir son certificat"}
               </button>
+
+              {/* Section de partage social */}
+              {showSocialShare && (
+                <div className="mt-6 p-6 bg-linear-to-br from-yellow-50 to-amber-50 rounded-2xl border-2 border-yellow-200 shadow-md">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Share2 className="w-5 h-5 text-amber-700" />
+                    <h3 className="text-lg font-bold text-amber-900">
+                      🌟 Partagez votre engagement !
+                    </h3>
+                  </div>
+
+                  <p className="text-sm text-amber-800 mb-4">
+                    Vous aussi vous pouvez nous aider à sensibiliser en publiant
+                    sur vos réseaux
+                  </p>
+
+                  {/* Bouton de téléchargement */}
+                  <button
+                    type="button"
+                    onClick={handleDownloadCertificate}
+                    className="w-full py-3 px-4 mb-3 rounded-full bg-white border-2 border-amber-300 hover:border-amber-400 hover:bg-amber-50 transition-colors text-amber-900 font-semibold flex items-center justify-center gap-2 shadow-sm"
+                  >
+                    <Download className="w-5 h-5" />
+                    Télécharger mon certificat
+                  </button>
+
+                  <div className="space-y-2">
+                    {/* Bouton Facebook */}
+                    <button
+                      type="button"
+                      onClick={handleShareFacebook}
+                      className="w-full py-3 px-4 rounded-full bg-[#1877f2] hover:bg-[#0c63d4] transition-colors text-white font-semibold shadow-sm"
+                    >
+                      📘 Partager sur Facebook
+                    </button>
+
+                    {/* Bouton LinkedIn */}
+                    <button
+                      type="button"
+                      onClick={handleShareLinkedIn}
+                      className="w-full py-3 px-4 rounded-full bg-[#0077b5] hover:bg-[#006399] transition-colors text-white font-semibold shadow-sm"
+                    >
+                      💼 Partager sur LinkedIn
+                    </button>
+
+                    {/* Bouton Instagram */}
+                    <button
+                      type="button"
+                      onClick={handleShareInstagram}
+                      className="w-full py-3 px-4 rounded-full bg-linear-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 transition-colors text-white font-semibold shadow-sm"
+                    >
+                      📸 Publier sur Instagram
+                    </button>
+                  </div>
+
+                  <p className="text-xs text-amber-700 mt-4 text-center italic">
+                    Utilisez le hashtag #EngagementLeucémie
+                  </p>
+                </div>
+              )}
             </form>
           </div>
 

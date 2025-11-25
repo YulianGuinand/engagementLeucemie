@@ -3,7 +3,8 @@ import nodemailer from "nodemailer";
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, pseudo, imageDataUrl } = await request.json();
+    const { email, pseudo, imageDataUrl, certificatePath } =
+      await request.json();
 
     if (!email || !imageDataUrl) {
       return NextResponse.json(
@@ -73,6 +74,104 @@ export async function POST(request: NextRequest) {
                 <p style="margin: 0; color: #047857; font-size: 14px; line-height: 1.5;">
                   Ensemble, nous pouvons faire la différence. Rejoignez-nous sur nos réseaux sociaux et partagez votre certificat avec #EngagementLeucémie
                 </p>
+              </div>
+              
+              <!-- Social Sharing Section -->
+              <div style="margin: 30px 0; padding: 30px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px; border: 2px solid #fbbf24; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <div style="text-align: center; margin-bottom: 25px;">
+                  <h3 style="margin: 0 0 10px 0; color: #78350f; font-size: 20px; font-weight: bold;">
+                    🌟 Aidez-nous à sensibiliser !
+                  </h3>
+                  <p style="margin: 0; color: #92400e; font-size: 15px; line-height: 1.6;">
+                    Vous aussi vous pouvez nous aider en publiant sur vos réseaux
+                  </p>
+                </div>
+
+                <!-- Instructions visuelles -->
+                <div style="background-color: rgba(255, 255, 255, 0.7); border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                  <p style="margin: 0 0 15px 0; color: #78350f; font-size: 14px; font-weight: bold;">
+                    📋 Comment partager votre certificat :
+                  </p>
+                  <table role="presentation" style="width: 100%;">
+                    <tr>
+                      <td style="padding: 8px 0; color: #92400e; font-size: 13px; line-height: 1.6;">
+                        <strong style="color: #78350f;">1️⃣</strong> Téléchargez le <strong>certificat en pièce jointe</strong> de cet email
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0; color: #92400e; font-size: 13px; line-height: 1.6;">
+                        <strong style="color: #78350f;">2️⃣</strong> Cliquez sur le bouton du réseau social de votre choix ci-dessous
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0; color: #92400e; font-size: 13px; line-height: 1.6;">
+                        <strong style="color: #78350f;">3️⃣</strong> Ajoutez votre certificat à votre publication
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0; color: #92400e; font-size: 13px; line-height: 1.6;">
+                        <strong style="color: #78350f;">4️⃣</strong> Publiez et inspirez votre communauté ! 💪
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                
+                <!-- Social Media Buttons avec messages personnalisés -->
+                <table role="presentation" style="width: 100%; margin: 0 auto;">
+                  <tr>
+                    <td align="center">
+                      <!-- Facebook -->
+                      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                        `https://engagement-leucemie.vercel.app/share?pseudo=${
+                          pseudo || "Nouveau membre"
+                        }&image=https://engagement-leucemie.vercel.app${certificatePath}`
+                      )}" style="display: inline-block; margin: 5px; padding: 14px 24px; background-color: #1877f2; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="vertical-align: middle; margin-right: 8px;" viewBox="0 0 16 16">
+                          <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>
+                        </svg>
+                        Publier sur Facebook
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="center">
+                      <!-- LinkedIn -->
+                      <a href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                        `https://engagement-leucemie.vercel.app/share?pseudo=${
+                          pseudo || "Nouveau membre"
+                        }&image=https://engagement-leucemie.vercel.app${certificatePath}`
+                      )}" style="display: inline-block; margin: 5px; padding: 14px 24px; background-color: #0077b5; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);">
+                        💼 Publier sur LinkedIn
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="center">
+                      <!-- Instagram Note avec instructions -->
+                      <div style="margin-top: 10px; padding: 15px; background-color: rgba(255, 255, 255, 0.5); border-radius: 8px;">
+                        <p style="margin: 0 0 8px 0; color: #78350f; font-size: 14px; font-weight: bold;">
+                          📸 Pour Instagram :
+                        </p>
+                        <p style="margin: 0; color: #92400e; font-size: 12px; line-height: 1.5;">
+                          1. Téléchargez le certificat en pièce jointe<br/>
+                          2. Ouvrez l'app Instagram<br/>
+                          3. Créez un nouveau post avec votre certificat<br/>
+                          4. Ajoutez le message : <em>"Je suis fier de soutenir la lutte contre la leucémie ! 💪 #EngagementLeucémie"</em>
+                        </p>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Hashtag reminder -->
+                <div style="margin-top: 20px; text-align: center; padding: 15px; background-color: rgba(255, 255, 255, 0.5); border-radius: 8px;">
+                  <p style="margin: 0; color: #78350f; font-size: 13px; font-weight: bold;">
+                    ✨ N'oubliez pas d'utiliser le hashtag :
+                  </p>
+                  <p style="margin: 5px 0 0 0; color: #92400e; font-size: 16px; font-weight: bold;">
+                    #EngagementLeucémie
+                  </p>
+                </div>
               </div>
               
               <!-- Buttons -->
