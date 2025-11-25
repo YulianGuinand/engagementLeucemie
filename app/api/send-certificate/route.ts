@@ -45,12 +45,12 @@ export async function POST(request: NextRequest) {
         <table role="presentation" style="width: 600px; border-collapse: collapse; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
           <!-- Header -->
           <tr>
-            <td style="background: linear-gradient(135deg, #10b981 0%, #14b8a6 50%, #06b6d4 100%); padding: 40px 30px; text-align: center;">
-              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: bold;">
-                🎉 Félicitations ${pseudo || "à vous"} ! 🎉
+            <td style="background-color: #10b981; padding: 40px 30px; text-align: center;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 600; letter-spacing: -0.5px;">
+                Félicitations ${pseudo || "à vous"} ! 🎉
               </h1>
-              <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px; opacity: 0.95;">
-                Votre Certificat d'Engagement est prêt
+              <p style="margin: 12px 0 0 0; color: #ffffff; font-size: 16px; opacity: 0.9;">
+                Votre certificat d'engagement est prêt
               </p>
             </td>
           </tr>
@@ -58,65 +58,21 @@ export async function POST(request: NextRequest) {
           <!-- Content -->
           <tr>
             <td style="padding: 40px 30px;">
-              <h2 style="margin: 0 0 20px 0; color: #1f2937; font-size: 22px;">
-                Merci pour votre engagement ! ❤️
-              </h2>
-              <p style="margin: 0 0 15px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
-                Nous sommes ravis de vous compter parmi nos soutiens dans la lutte contre la leucémie.
+              <p style="margin: 0 0 16px 0; color: #374151; font-size: 16px; line-height: 1.6;">
+                Merci pour votre engagement dans la lutte contre la leucémie 💚
               </p>
-              <p style="margin: 0 0 15px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
-                Votre certificat d'engagement est joint à cet email. N'hésitez pas à le partager sur vos réseaux sociaux pour inspirer d'autres personnes à s'engager !
+              <p style="margin: 0 0 24px 0; color: #6b7280; font-size: 15px; line-height: 1.6;">
+                Votre certificat est joint à cet email. N'hésitez pas à le partager sur vos réseaux sociaux pour inspirer d'autres personnes à s'engager !
               </p>
-              
-              <!-- CTA Box -->
-              <div style="background-color: #f0fdf4; border-left: 4px solid #10b981; padding: 20px; margin: 25px 0; border-radius: 4px;">
-                <p style="margin: 0 0 10px 0; color: #065f46; font-weight: bold; font-size: 16px;">
-                  💪 Partagez votre engagement
-                </p>
-                <p style="margin: 0; color: #047857; font-size: 14px; line-height: 1.5;">
-                  Ensemble, nous pouvons faire la différence. Rejoignez-nous sur nos réseaux sociaux et partagez votre certificat avec #EngagementLeucémie
-                </p>
-              </div>
               
               <!-- Social Sharing Section -->
-              <div style="margin: 30px 0; padding: 30px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px; border: 2px solid #fbbf24; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                <div style="text-align: center; margin-bottom: 25px;">
-                  <h3 style="margin: 0 0 10px 0; color: #78350f; font-size: 20px; font-weight: bold;">
-                    🌟 Aidez-nous à sensibiliser !
-                  </h3>
-                  <p style="margin: 0; color: #92400e; font-size: 15px; line-height: 1.6;">
-                    Vous aussi vous pouvez nous aider en publiant sur vos réseaux
-                  </p>
-                </div>
-
-                <!-- Instructions visuelles -->
-                <div style="background-color: rgba(255, 255, 255, 0.7); border-radius: 8px; padding: 20px; margin-bottom: 20px;">
-                  <p style="margin: 0 0 15px 0; color: #78350f; font-size: 14px; font-weight: bold;">
-                    📋 Comment partager votre certificat :
-                  </p>
-                  <table role="presentation" style="width: 100%;">
-                    <tr>
-                      <td style="padding: 8px 0; color: #92400e; font-size: 13px; line-height: 1.6;">
-                        <strong style="color: #78350f;">1️⃣</strong> Téléchargez le <strong>certificat en pièce jointe</strong> de cet email
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="padding: 8px 0; color: #92400e; font-size: 13px; line-height: 1.6;">
-                        <strong style="color: #78350f;">2️⃣</strong> Cliquez sur le bouton du réseau social de votre choix ci-dessous
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="padding: 8px 0; color: #92400e; font-size: 13px; line-height: 1.6;">
-                        <strong style="color: #78350f;">3️⃣</strong> Ajoutez votre certificat à votre publication
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="padding: 8px 0; color: #92400e; font-size: 13px; line-height: 1.6;">
-                        <strong style="color: #78350f;">4️⃣</strong> Publiez et inspirez votre communauté ! 💪
-                      </td>
-                    </tr>
-                  </table>
-                </div>
+              <div style="margin: 30px 0; padding: 28px; background-color: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb;">
+                <h3 style="margin: 0 0 8px 0; color: #111827; font-size: 18px; font-weight: 600;">
+                  Vous aussi vous pouvez nous aider à sensibiliser en publiant sur vos reseaux
+                </h3>
+                <p style="margin: 0 0 20px 0; color: #6b7280; font-size: 14px; line-height: 1.5;">
+                  Aidez-nous à sensibiliser en partageant votre certificat sur vos réseaux sociaux avec #EngagementLeucémie
+                </p>
                 
                 <!-- Social Media Buttons avec messages personnalisés -->
                 <table role="presentation" style="width: 100%; margin: 0 auto;">
@@ -147,37 +103,28 @@ export async function POST(request: NextRequest) {
     )}&summary=${encodeURIComponent(
       "Je suis fier d'annoncer mon adhésion ✨"
     )}" style="display: inline-block; margin: 5px; padding: 14px 24px; background-color: #0077b5; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);">
-                        💼 Publier sur LinkedIn
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="vertical-align: middle; margin-right: 8px;" viewBox="0 0 16 16">
+                          <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z"/>
+                        </svg>
+                        Publier sur LinkedIn
                       </a>
                     </td>
                   </tr>
                   <tr>
                     <td align="center">
-                      <!-- Instagram Note avec instructions -->
-                      <div style="margin-top: 10px; padding: 15px; background-color: rgba(255, 255, 255, 0.5); border-radius: 8px;">
-                        <p style="margin: 0 0 8px 0; color: #78350f; font-size: 14px; font-weight: bold;">
-                          📸 Pour Instagram :
+                      <div style="margin-top: 10px; padding: 16px; background-color: #ffffff; border-radius: 6px; border: 1px solid #e5e7eb;">
+                        <p style="margin: 0 0 8px 0; color: #111827; font-size: 14px; font-weight: 600;">
+                          📸 Pour Instagram
                         </p>
-                        <p style="margin: 0; color: #92400e; font-size: 12px; line-height: 1.5;">
-                          1. Téléchargez le certificat en pièce jointe<br/>
-                          2. Ouvrez l'app Instagram<br/>
-                          3. Créez un nouveau post avec votre certificat<br/>
-                          4. Ajoutez le message : <em>"Je suis fier de soutenir la lutte contre la leucémie ! 💪 #EngagementLeucémie"</em>
+                        <p style="margin: 0; color: #6b7280; font-size: 13px; line-height: 1.5;">
+                          Téléchargez le certificat joint et publiez-le sur Instagram avec le hashtag #EngagementLeucémie
                         </p>
                       </div>
                     </td>
                   </tr>
                 </table>
 
-                <!-- Hashtag reminder -->
-                <div style="margin-top: 20px; text-align: center; padding: 15px; background-color: rgba(255, 255, 255, 0.5); border-radius: 8px;">
-                  <p style="margin: 0; color: #78350f; font-size: 13px; font-weight: bold;">
-                    ✨ N'oubliez pas d'utiliser le hashtag :
-                  </p>
-                  <p style="margin: 5px 0 0 0; color: #92400e; font-size: 16px; font-weight: bold;">
-                    #EngagementLeucémie
-                  </p>
-                </div>
+
               </div>
               
               <!-- Buttons -->
