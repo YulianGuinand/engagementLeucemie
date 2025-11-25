@@ -138,11 +138,15 @@ export async function POST(request: NextRequest) {
                   <tr>
                     <td align="center">
                       <!-- LinkedIn -->
-                      <a href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                      <a href="https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
                         `https://engagement-leucemie.vercel.app/share?pseudo=${
                           pseudo || "Nouveau membre"
-                        }&image=https://engagement-leucemie.vercel.app${certificatePath}`
-                      )}" style="display: inline-block; margin: 5px; padding: 14px 24px; background-color: #0077b5; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);">
+                        }&image=${certificatePath}`
+                      )}&title=${encodeURIComponent(
+      "J'ai rejoint l'association !"
+    )}&summary=${encodeURIComponent(
+      "Je suis fier d'annoncer mon adhésion ✨"
+    )}" style="display: inline-block; margin: 5px; padding: 14px 24px; background-color: #0077b5; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);">
                         💼 Publier sur LinkedIn
                       </a>
                     </td>
