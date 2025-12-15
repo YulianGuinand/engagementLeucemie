@@ -1,5 +1,6 @@
 import { toPng } from "html-to-image";
 import { LayoutTemplate } from "lucide-react";
+import Image from "next/image";
 import {
   forwardRef,
   useEffect,
@@ -19,7 +20,7 @@ export interface PreviewRef {
 
 const CERTIFICATE_CONFIG = {
   1: {
-    image: "/certificat_1_blank.webp",
+    image: "/certificat_1_blanck.webp",
     textColor: "#1f2937",
     fontClass: "font-serif italic",
     nameStyle: {
@@ -28,7 +29,7 @@ const CERTIFICATE_CONFIG = {
       transform: "translate(-50%, -50%)",
     },
     nameFontSize: 40,
-    dateStyle: { bottom: "21.25%", left: "29.25%" },
+    dateStyle: { bottom: "20.75%", left: "23%" },
     dateFontSize: 16,
     datePrefix: "",
     signatureStyle: { bottom: "15%", left: "29.25%" },
@@ -36,7 +37,7 @@ const CERTIFICATE_CONFIG = {
     signatureMaxHeight: 70,
   },
   2: {
-    image: "/certificat_2_blank.webp",
+    image: "/certificat_2_blanck.webp",
     textColor: "#1f2937",
     fontClass: "font-serif italic",
     nameStyle: {
@@ -45,7 +46,7 @@ const CERTIFICATE_CONFIG = {
       transform: "translate(-50%, -50%)",
     },
     nameFontSize: 40,
-    dateStyle: { bottom: "21.35%", left: "29.5%" },
+    dateStyle: { bottom: "20.75%", left: "23%" },
     dateFontSize: 16,
     datePrefix: "",
     signatureStyle: { bottom: "15%", left: "29.5%" },
@@ -53,18 +54,18 @@ const CERTIFICATE_CONFIG = {
     signatureMaxHeight: 70,
   },
   3: {
-    image: "/certificat_3_blank.webp",
+    image: "/certificat_3_blanck.webp",
     textColor: "#1f2937",
     fontClass: "font-serif italic",
     nameStyle: {
-      top: "50%",
+      top: "52.5%",
       left: "50%",
       transform: "translate(-50%, -50%)",
     },
     nameFontSize: 40,
     dateStyle: {
-      bottom: "16%",  
-      left: "27%",
+      bottom: "16%",
+      left: "19%",
     },
     dateFontSize: 16,
     datePrefix: "",
@@ -187,9 +188,11 @@ const Preview = forwardRef<PreviewRef, PreviewProps>(
               margin: "0 auto",
             }}
           >
-            <img
+            <Image
               src={config.image}
               alt={`Certificat Modèle ${selectedModel}`}
+              width={200}
+              height={200}
               className="w-full h-auto object-cover block"
               onLoad={(e) => {
                 const img = e.currentTarget as HTMLImageElement;
@@ -237,9 +240,11 @@ const Preview = forwardRef<PreviewRef, PreviewProps>(
             </div>
 
             {signature && (
-              <img
+              <Image
                 src={signature}
                 alt="Signature"
+                width={200}
+                height={200}
                 className="absolute"
                 style={{
                   ...config.signatureStyle,
