@@ -1,5 +1,5 @@
 import { toPng } from "html-to-image";
-import { Award, Heart, Share2 } from "lucide-react";
+import { LayoutTemplate } from "lucide-react";
 import {
   forwardRef,
   useEffect,
@@ -10,200 +10,247 @@ import {
 
 interface PreviewProps {
   pseudo?: string;
-  description?: string;
-  avatarUrl?: string | null;
-  certificateColor?: string;
+  signature?: string | null;
 }
 
 export interface PreviewRef {
   downloadCertificate: () => Promise<string | null>;
 }
 
-const Preview = forwardRef<PreviewRef, PreviewProps>(
-  (
-    {
-      pseudo = "",
-      description = "",
-      avatarUrl = null,
-      certificateColor = "#10b981",
+const CERTIFICATE_CONFIG = {
+  1: {
+    image: "/certificat_1_blank.webp",
+    textColor: "#1f2937",
+    fontClass: "font-serif italic",
+    nameStyle: {
+      top: "48%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
     },
-    ref
-  ) => {
-    const [zoom, setZoom] = useState(1);
+    nameFontSize: 40,
+    dateStyle: { bottom: "21.25%", left: "29.25%" },
+    dateFontSize: 16,
+    datePrefix: "",
+    signatureStyle: { bottom: "15%", left: "29.25%" },
+    signatureMaxWidth: 180,
+    signatureMaxHeight: 70,
+  },
+  2: {
+    image: "/certificat_2_blank.webp",
+    textColor: "#1f2937",
+    fontClass: "font-serif italic",
+    nameStyle: {
+      top: "48%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+    },
+    nameFontSize: 40,
+    dateStyle: { bottom: "21.35%", left: "29.5%" },
+    dateFontSize: 16,
+    datePrefix: "",
+    signatureStyle: { bottom: "15%", left: "29.5%" },
+    signatureMaxWidth: 180,
+    signatureMaxHeight: 70,
+  },
+  3: {
+    image: "/certificat_3_blank.webp",
+    textColor: "#1f2937",
+    fontClass: "font-serif italic",
+    nameStyle: {
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+    },
+    nameFontSize: 40,
+    dateStyle: {
+      bottom: "16%",  
+      left: "27%",
+    },
+    dateFontSize: 16,
+    datePrefix: "",
+    signatureStyle: {
+      bottom: "10%",
+      left: "27%",
+    },
+    signatureMaxWidth: 180,
+    signatureMaxHeight: 70,
+  },
+};
+
+const Preview = forwardRef<PreviewRef, PreviewProps>(
+  ({ pseudo = "", signature = null }, ref) => {
+    const [selectedModel, setSelectedModel] = useState<number>(1);
     const certificateRef = useRef<HTMLDivElement>(null);
-
-    function adjustBrightness(color: string, amount: number): string {
-      const hex = color.replace("#", "");
-      const r = Math.max(
-        0,
-        Math.min(255, parseInt(hex.substr(0, 2), 16) + amount)
-      );
-      const g = Math.max(
-        0,
-        Math.min(255, parseInt(hex.substr(2, 2), 16) + amount)
-      );
-      const b = Math.max(
-        0,
-        Math.min(255, parseInt(hex.substr(4, 2), 16) + amount)
-      );
-      return `#${r.toString(16).padStart(2, "0")}${g
-        .toString(16)
-        .padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
-    }
-
-    const gradientStyle = {
-      background: `linear-gradient(to bottom right, ${certificateColor}, ${adjustBrightness(
-        certificateColor,
-        -20
-      )}, ${adjustBrightness(certificateColor, -40)})`,
-    };
+    const [currentDate, setCurrentDate] = useState("");
+    const [containerWidth, setContainerWidth] = useState(1000);
+    const [imageHeight, setImageHeight] = useState(0);
 
     useEffect(() => {
-      const updateZoom = () => {
-        const width = window.innerWidth;
+      const date = new Date();
+      setCurrentDate(date.toLocaleDateString("fr-FR"));
+    }, []);
 
-        if (width < 768) {
-          setZoom(0.5);
-        } else if (width < 1024) {
-          setZoom(0.65);
-        } else if (width < 1280) {
-          setZoom(0.8);
-        } else if (width < 1536) {
-          setZoom(0.9);
-        } else {
-          setZoom(1);
+    useEffect(() => {
+      const updateContainerWidth = () => {
+        if (certificateRef.current) {
+          const width = certificateRef.current.offsetWidth;
+          if (width > 0) {
+            setContainerWidth(width);
+          }
         }
       };
 
-      updateZoom();
-      window.addEventListener("resize", updateZoom);
-      return () => window.removeEventListener("resize", updateZoom);
-    }, []);
+      updateContainerWidth();
+
+      let resizeObserver: ResizeObserver | null = null;
+
+      if (certificateRef.current && typeof ResizeObserver !== "undefined") {
+        resizeObserver = new ResizeObserver((entries) => {
+          for (const entry of entries) {
+            const width = entry.contentRect.width;
+            if (width > 0) {
+              setContainerWidth(width);
+            }
+          }
+        });
+        resizeObserver.observe(certificateRef.current);
+      }
+
+      window.addEventListener("resize", updateContainerWidth);
+
+      const timeoutId = setTimeout(updateContainerWidth, 100);
+
+      return () => {
+        if (resizeObserver) {
+          resizeObserver.disconnect();
+        }
+        clearTimeout(timeoutId);
+        window.removeEventListener("resize", updateContainerWidth);
+      };
+    }, [selectedModel]);
 
     useImperativeHandle(ref, () => ({
       downloadCertificate: async () => {
         if (!certificateRef.current) return null;
-
         try {
           const dataUrl = await toPng(certificateRef.current, {
             cacheBust: true,
-            pixelRatio: 2,
+            pixelRatio: 3,
           });
-
           const link = document.createElement("a");
-          link.download = `certificat-engagement-${pseudo || "leucemie"}.png`;
+          const safePseudo = (pseudo || "participant")
+            .replace(/[^a-z0-9]/gi, "_")
+            .toLowerCase();
+          link.download = `certificat-${selectedModel}-${safePseudo}.png`;
           link.href = dataUrl;
           link.click();
-
           return dataUrl;
         } catch (error) {
-          console.error("Erreur lors de la génération du certificat:", error);
+          console.error("Erreur génération certificat:", error);
           return null;
         }
       },
     }));
 
+    const config =
+      CERTIFICATE_CONFIG[selectedModel as keyof typeof CERTIFICATE_CONFIG];
+
+    const scaleFactor = containerWidth / 1000;
+
     return (
-      <div
-        className="w-full h-fit flex items-center justify-center"
-        style={{ zoom }}
-      >
-        <div
-          ref={certificateRef}
-          className="w-full max-w-md aspect-9/16 rounded-3xl shadow-2xl p-8 flex flex-col items-center justify-between relative overflow-hidden"
-          style={gradientStyle}
-        >
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-10 right-10 w-40 h-40 bg-white rounded-full blur-3xl"></div>
-            <div className="absolute bottom-20 left-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>
-          </div>
+      <div className="w-full flex flex-col items-center gap-4 md:gap-6 py-4 md:py-6">
+        <div className="flex gap-2 md:gap-3 bg-gray-100 p-1.5 md:p-2 rounded-xl">
+          {[1, 2, 3].map((num) => (
+            <button
+              key={num}
+              onClick={() => setSelectedModel(num)}
+              className={`flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors ${
+                selectedModel === num
+                  ? "bg-blue-600 text-white shadow"
+                  : "bg-white text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              <LayoutTemplate className="w-3 h-3 md:w-4 md:h-4" />
+              <span className="hidden sm:inline">Modèle {num}</span>
+              <span className="sm:hidden">{num}</span>
+            </button>
+          ))}
+        </div>
 
-          <div className="relative z-10 flex flex-col items-center justify-between h-full w-full">
-            <div className="text-center space-y-3">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full mb-2">
-                <Award className="w-10 h-10 text-white" strokeWidth={2} />
-              </div>
-              <h2 className="text-2xl font-bold text-white tracking-wide">
-                CERTIFICAT
-              </h2>
-              <h3 className="text-xl font-semibold text-white/90">
-                D&apos;ENGAGEMENT
-              </h3>
-              <div className="w-24 h-1 bg-white/40 mx-auto rounded-full"></div>
+        <div className="w-full max-w-[1000px] px-2 sm:px-4">
+          <div
+            ref={certificateRef}
+            className="relative w-full shadow-2xl overflow-hidden"
+            style={{
+              width: "100%",
+              maxWidth: "1000px",
+              margin: "0 auto",
+            }}
+          >
+            <img
+              src={config.image}
+              alt={`Certificat Modèle ${selectedModel}`}
+              className="w-full h-auto object-cover block"
+              onLoad={(e) => {
+                const img = e.currentTarget as HTMLImageElement;
+                if (img.naturalHeight) {
+                  setImageHeight(img.naturalHeight);
+                }
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+                if (e.currentTarget.parentElement) {
+                  e.currentTarget.parentElement.style.height = "600px";
+                  e.currentTarget.parentElement.style.backgroundColor =
+                    "#f0f0f0";
+                  e.currentTarget.parentElement.innerHTML += `<div class="absolute inset-0 flex items-center justify-center text-gray-400">Image ${config.image} introuvable</div>`;
+                }
+                setImageHeight(600);
+              }}
+            />
+
+            <div
+              className={`absolute text-center ${config.fontClass}`}
+              style={{
+                ...config.nameStyle,
+                color: config.textColor,
+                fontSize: `${config.nameFontSize * scaleFactor}px`,
+                maxWidth: "90%",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {pseudo || "Prénom Nom"}
             </div>
 
-            <div className="flex-1 flex flex-col items-center justify-center space-y-6 py-6">
-              <div className="relative">
-                <div className="w-32 h-32 rounded-full bg-white/20 backdrop-blur-sm border-4 border-white/50 overflow-hidden flex items-center justify-center shadow-xl">
-                  {avatarUrl ? (
-                    <img
-                      src={avatarUrl}
-                      alt="Avatar"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-linear-to-br from-white/30 to-white/10 flex items-center justify-center">
-                      <Heart
-                        className="w-16 h-16 text-white/70"
-                        strokeWidth={1.5}
-                      />
-                    </div>
-                  )}
-                </div>
-                <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg">
-                  <span className="text-2xl">✨</span>
-                </div>
-              </div>
-
-              <div className="text-center space-y-2 px-4">
-                <h4 className="text-3xl font-bold text-white drop-shadow-lg">
-                  {pseudo || "Votre pseudo"}
-                </h4>
-                {description && (
-                  <p className="text-base text-white/90 font-medium italic">
-                    &quot;{description}&quot;
-                  </p>
-                )}
-              </div>
-
-              <div className="bg-white/15 backdrop-blur-md rounded-2xl p-5 border border-white/30 shadow-lg">
-                <p className="text-center text-white text-sm leading-relaxed">
-                  <span className="font-bold text-base block mb-2">
-                    🎉 Félicitations ! 🎉
-                  </span>
-                  Vous avez pris l&apos;engagement de soutenir
-                  <br />
-                  la lutte contre la leucémie.
-                  <br />
-                  <span className="font-semibold">
-                    Votre geste compte énormément !
-                  </span>
-                </p>
-              </div>
+            <div
+              className={`absolute whitespace-nowrap z-99 ${config.fontClass}`}
+              style={{
+                ...config.dateStyle,
+                color: config.textColor,
+                fontSize: `${config.dateFontSize * scaleFactor}px`,
+              }}
+            >
+              {config.datePrefix}
+              {currentDate}
             </div>
 
-            <div className="space-y-4 w-full">
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <div className="flex items-center justify-center gap-2 text-white">
-                  <Share2 className="w-5 h-5" />
-                  <p className="text-sm font-semibold">
-                    Partagez votre engagement
-                  </p>
-                </div>
-                <p className="text-xs text-white/80 text-center mt-1">
-                  Inspirez votre entourage sur les réseaux sociaux
-                </p>
-              </div>
-
-              <div className="text-center">
-                <p className="text-white/90 text-sm font-medium">
-                  Ensemble, faisons la différence 💪
-                </p>
-                <p className="text-white/70 text-xs mt-1">
-                  #EngagementLeucémie #Solidarité
-                </p>
-              </div>
-            </div>
+            {signature && (
+              <img
+                src={signature}
+                alt="Signature"
+                className="absolute"
+                style={{
+                  ...config.signatureStyle,
+                  maxWidth: `${config.signatureMaxWidth * scaleFactor}px`,
+                  maxHeight: `${config.signatureMaxHeight * scaleFactor}px`,
+                  width: "auto",
+                  height: "auto",
+                  objectFit: "contain",
+                }}
+              />
+            )}
           </div>
         </div>
       </div>
