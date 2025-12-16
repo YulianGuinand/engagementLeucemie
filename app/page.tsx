@@ -3,21 +3,18 @@
 import Button from "@/components/Button";
 import Footer from "@/components/Footer";
 import Preview, { PreviewRef } from "@/components/Preview";
-import SignaturePad from "@/components/ui/signature-pad";
 import { useRef, useState } from "react";
 
 export default function Home() {
   const [status, setStatus] = useState<string | null>(null);
   const [previewShow, setPreviewShow] = useState<boolean>(false);
-  const [pseudo, setPseudo] = useState<string>("");
+  const [prenom, setPrenom] = useState<string>("");
+  const [nom, setNom] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [includeSignature, setIncludeSignature] = useState<boolean>(false);
-  const [signatureDataUrl, setSignatureDataUrl] = useState<string | null>(null);
   const [certificateDataUrl, setCertificateDataUrl] = useState<string | null>(
     null
   );
   const previewRef = useRef<PreviewRef>(null);
-  const signaturePadRef = useRef<any>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,7 +57,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           imageDataUrl,
-          pseudo,
+          pseudo: `${prenom} ${nom}`.trim(),
         }),
       });
 
@@ -94,7 +91,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           email,
-          pseudo,
+          pseudo: `${prenom} ${nom}`.trim(),
           imageDataUrl,
           certificatePath,
         }),
@@ -132,14 +129,26 @@ export default function Home() {
           >
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="flex flex-col gap-2">
-                <label htmlFor="pseudo">Pseudonyme</label>
+                <label htmlFor="prenom">Prénom</label>
                 <input
                   type="text"
-                  id="pseudo"
-                  value={pseudo}
-                  onChange={(e) => setPseudo(e.target.value)}
+                  id="prenom"
+                  value={prenom}
+                  onChange={(e) => setPrenom(e.target.value)}
                   className="ring-0 py-3 px-4 rounded-full bg-zinc-100 text-zinc-900 placeholder:text-zinc-900 border-2"
-                  placeholder="Exemple : SuperMan"
+                  placeholder="Exemple : Jean"
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label htmlFor="nom">Nom</label>
+                <input
+                  type="text"
+                  id="nom"
+                  value={nom}
+                  onChange={(e) => setNom(e.target.value)}
+                  className="ring-0 py-3 px-4 rounded-full bg-zinc-100 text-zinc-900 placeholder:text-zinc-900 border-2"
+                  placeholder="Exemple : Dupont"
                 />
               </div>
 
@@ -158,47 +167,6 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-3">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={includeSignature}
-                    onChange={(e) => setIncludeSignature(e.target.checked)}
-                    className="w-4 h-4 cursor-pointer"
-                  />
-                  <span>Ajouter ma signature</span>
-                </label>
-
-                {includeSignature && (
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-zinc-600">
-                        Signez ci-dessous :
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          signaturePadRef.current?.clear();
-                          setSignatureDataUrl(null);
-                        }}
-                        className="text-xs text-blue-600 hover:text-blue-800 underline"
-                      >
-                        Effacer
-                      </button>
-                    </div>
-                    <SignaturePad
-                      ref={signaturePadRef}
-                      variant="outline"
-                      size="sm"
-                      penColor="#1f2937"
-                      lineWidth={2}
-                      showButtons={false}
-                      onChange={(signature) => setSignatureDataUrl(signature)}
-                    />
-                  </div>
-                )}
-              </div>
-
               <button
                 type="submit"
                 className="w-full py-2 rounded-full bg-[#26a64e] cursor-pointer hover:bg-[#29b254] transition-colors text-white font-semibold"
@@ -213,11 +181,7 @@ export default function Home() {
               previewShow ? "flex" : "hidden lg:flex"
             }`}
           >
-            <Preview
-              ref={previewRef}
-              pseudo={pseudo}
-              signature={signatureDataUrl}
-            />
+            <Preview ref={previewRef} prenom={prenom} nom={nom} />
           </div>
         </div>
 

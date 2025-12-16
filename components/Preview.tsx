@@ -10,8 +10,8 @@ import {
 } from "react";
 
 interface PreviewProps {
-  pseudo?: string;
-  signature?: string | null;
+  prenom?: string;
+  nom?: string;
 }
 
 export interface PreviewRef {
@@ -32,9 +32,9 @@ const CERTIFICATE_CONFIG = {
     dateStyle: { bottom: "20.75%", left: "23%" },
     dateFontSize: 16,
     datePrefix: "",
-    signatureStyle: { bottom: "15%", left: "29.25%" },
-    signatureMaxWidth: 180,
-    signatureMaxHeight: 70,
+    tamponStyle: { bottom: "8%", right: "15%" },
+    tamponMaxWidth: 150,
+    tamponMaxHeight: 150,
   },
   2: {
     image: "/certificat_2_blanck.webp",
@@ -49,9 +49,9 @@ const CERTIFICATE_CONFIG = {
     dateStyle: { bottom: "20.75%", left: "23%" },
     dateFontSize: 16,
     datePrefix: "",
-    signatureStyle: { bottom: "15%", left: "29.5%" },
-    signatureMaxWidth: 180,
-    signatureMaxHeight: 70,
+    tamponStyle: { bottom: "12%", right: "43%" },
+    tamponMaxWidth: 125,
+    tamponMaxHeight: 1125,
   },
   3: {
     image: "/certificat_3_blanck.webp",
@@ -69,17 +69,15 @@ const CERTIFICATE_CONFIG = {
     },
     dateFontSize: 16,
     datePrefix: "",
-    signatureStyle: {
-      bottom: "10%",
-      left: "27%",
-    },
-    signatureMaxWidth: 180,
-    signatureMaxHeight: 70,
+    tamponStyle: { bottom: "10%", right: "15%" },
+    tamponMaxWidth: 125,
+    tamponMaxHeight: 125,
   },
 };
 
 const Preview = forwardRef<PreviewRef, PreviewProps>(
-  ({ pseudo = "", signature = null }, ref) => {
+  ({ prenom = "", nom = "" }, ref) => {
+    const fullName = `${prenom} ${nom}`.trim();
     const [selectedModel, setSelectedModel] = useState<number>(1);
     const certificateRef = useRef<HTMLDivElement>(null);
     const [currentDate, setCurrentDate] = useState("");
@@ -137,12 +135,13 @@ const Preview = forwardRef<PreviewRef, PreviewProps>(
           const dataUrl = await toPng(certificateRef.current, {
             cacheBust: true,
             pixelRatio: 3,
+            backgroundColor: "transparent",
           });
           const link = document.createElement("a");
-          const safePseudo = (pseudo || "participant")
+          const safeName = (fullName || "participant")
             .replace(/[^a-z0-9]/gi, "_")
             .toLowerCase();
-          link.download = `certificat-${selectedModel}-${safePseudo}.png`;
+          link.download = `certificat-${selectedModel}-${safeName}.png`;
           link.href = dataUrl;
           link.click();
           return dataUrl;
@@ -224,7 +223,7 @@ const Preview = forwardRef<PreviewRef, PreviewProps>(
                 whiteSpace: "nowrap",
               }}
             >
-              {pseudo || "Prénom Nom"}
+              {fullName || "Prénom Nom"}
             </div>
 
             <div
@@ -239,23 +238,20 @@ const Preview = forwardRef<PreviewRef, PreviewProps>(
               {currentDate}
             </div>
 
-            {signature && (
-              <Image
-                src={signature}
-                alt="Signature"
-                width={200}
-                height={200}
-                className="absolute"
-                style={{
-                  ...config.signatureStyle,
-                  maxWidth: `${config.signatureMaxWidth * scaleFactor}px`,
-                  maxHeight: `${config.signatureMaxHeight * scaleFactor}px`,
-                  width: "auto",
-                  height: "auto",
-                  objectFit: "contain",
-                }}
-              />
-            )}
+            {/* Tampon */}
+            <img
+              src="/tampon.webp"
+              alt="Tampon"
+              className="absolute"
+              style={{
+                ...config.tamponStyle,
+                maxWidth: `${config.tamponMaxWidth * scaleFactor}px`,
+                maxHeight: `${config.tamponMaxHeight * scaleFactor}px`,
+                width: "auto",
+                height: "auto",
+                objectFit: "contain",
+              }}
+            />
           </div>
         </div>
       </div>
