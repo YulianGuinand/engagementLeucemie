@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     // --- Configuration FranceServ Hébergement ---
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || "smtps.franceserv.fr",
-      port: parseInt(process.env.SMTP_PORT || "25"),
+      port: 587,
       secure: false,
       // ignoreTLS: true,
       auth: {
