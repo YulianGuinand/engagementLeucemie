@@ -49,7 +49,7 @@ const CERTIFICATE_CONFIG = {
     dateStyle: { bottom: "20.75%", left: "23%" },
     dateFontSize: 16,
     datePrefix: "",
-    tamponStyle: { bottom: "12%", right: "43%" },
+    tamponStyle: { bottom: "12%", right: "19%" },
     tamponMaxWidth: 125,
     tamponMaxHeight: 1125,
   },
