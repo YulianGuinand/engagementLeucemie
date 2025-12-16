@@ -15,13 +15,13 @@ export async function POST(request: NextRequest) {
 
     // --- Configuration FranceServ Hébergement ---
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtps.franceserv.fr",
+      host: "smtps.franceserv.fr",
       port: 587,
       secure: false,
       // ignoreTLS: true,
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASSWORD,
+        user: "eleucemie@engagement-leucemie.com",
+        pass: "20El25/*-",
       },
     });
 
