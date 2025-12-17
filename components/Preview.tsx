@@ -78,6 +78,17 @@ const CERTIFICATE_CONFIG = {
 const Preview = forwardRef<PreviewRef, PreviewProps>(
   ({ prenom = "", nom = "" }, ref) => {
     const fullName = `${prenom} ${nom}`.trim();
+
+    // Calculer la taille de police dynamiquement en fonction de la longueur du nom
+    const getAdjustedFontSize = (baseFontSize: number, name: string) => {
+      const nameLength = name.length;
+      if (nameLength <= 12) return baseFontSize;
+      if (nameLength <= 16) return baseFontSize * 0.85;
+      if (nameLength <= 20) return baseFontSize * 0.75;
+      if (nameLength <= 25) return baseFontSize * 0.65;
+      return baseFontSize * 0.55;
+    };
+
     const [selectedModel, setSelectedModel] = useState<number>(1);
     const certificateRef = useRef<HTMLDivElement>(null);
     const [currentDate, setCurrentDate] = useState("");
@@ -136,6 +147,7 @@ const Preview = forwardRef<PreviewRef, PreviewProps>(
             cacheBust: true,
             pixelRatio: 3,
             backgroundColor: "transparent",
+            skipFonts: true,
           });
           const link = document.createElement("a");
           const safeName = (fullName || "participant")
@@ -190,8 +202,10 @@ const Preview = forwardRef<PreviewRef, PreviewProps>(
             <Image
               src={config.image}
               alt={`Certificat Modèle ${selectedModel}`}
-              width={200}
-              height={200}
+              width={1000}
+              height={1414}
+              quality={100}
+              unoptimized={true}
               className="w-full h-auto object-cover block"
               onLoad={(e) => {
                 const img = e.currentTarget as HTMLImageElement;
@@ -212,14 +226,17 @@ const Preview = forwardRef<PreviewRef, PreviewProps>(
             />
 
             <div
-              className={`absolute text-center ${config.fontClass}`}
+              className="absolute text-center"
               style={{
                 ...config.nameStyle,
                 color: config.textColor,
-                fontSize: `${config.nameFontSize * scaleFactor}px`,
-                maxWidth: "90%",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+                fontSize: `${
+                  getAdjustedFontSize(config.nameFontSize, fullName) *
+                  scaleFactor
+                }px`,
+                fontFamily: '"Playfair Display", Georgia, serif',
+                fontStyle: "italic",
+                maxWidth: "98%",
                 whiteSpace: "nowrap",
               }}
             >
@@ -227,11 +244,13 @@ const Preview = forwardRef<PreviewRef, PreviewProps>(
             </div>
 
             <div
-              className={`absolute whitespace-nowrap z-99 ${config.fontClass}`}
+              className="absolute whitespace-nowrap z-99"
               style={{
                 ...config.dateStyle,
                 color: config.textColor,
                 fontSize: `${config.dateFontSize * scaleFactor}px`,
+                fontFamily: '"Playfair Display", Georgia, serif',
+                fontStyle: "italic",
               }}
             >
               {config.datePrefix}
