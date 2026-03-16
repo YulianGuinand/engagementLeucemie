@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     if (!imageDataUrl) {
       return NextResponse.json(
         { error: "Image data URL requis" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -31,18 +31,21 @@ export async function POST(request: NextRequest) {
     const file = new File([imageBuffer], filename, { type: "image/png" });
 
     // Uploader vers UploadThing
-    const uploadResponse = await utapi.uploadFiles(file);
+    const [uploadResponse] = await utapi.uploadFiles([file]);
 
-    if (uploadResponse.error) {
-      console.error("Erreur UploadThing:", uploadResponse.error);
+    if (!uploadResponse || uploadResponse.error) {
+      console.error(
+        "Erreur UploadThing:",
+        uploadResponse?.error || "Réponse vide",
+      );
       return NextResponse.json(
         { error: "Erreur lors de l'upload du certificat" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     // Retourner l'URL publique du certificat
-    const publicUrl = uploadResponse.data?.url;
+    const publicUrl = uploadResponse.data?.url || uploadResponse.data?.ufsUrl;
 
     return NextResponse.json({
       success: true,
@@ -53,7 +56,7 @@ export async function POST(request: NextRequest) {
     console.error("Erreur lors de la sauvegarde du certificat:", error);
     return NextResponse.json(
       { error: "Erreur lors de la sauvegarde du certificat" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
