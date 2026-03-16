@@ -16,14 +16,17 @@ export async function POST(request: NextRequest) {
     const transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST || "smtp.gmail.com",
       port: parseInt(process.env.MAIL_PORT || "587"),
-      secure: process.env.MAIL_PORT === "465", // true pour 465, false pour les autres (STARTTLS)
+      secure: process.env.MAIL_PORT === "465",
       auth: {
         user: process.env.MAIL_USERNAME,
         pass: process.env.MAIL_PASSWORD,
       },
       tls: {
-        rejectUnauthorized: false, // Souvent nécessaire pour Gmail selon l'environnement
+        rejectUnauthorized: false,
       },
+      requireTLS:
+        process.env.MAIL_PORT === "587" ||
+        process.env.MAIL_ENCRYPTION === "tls",
     });
 
     // Convertir data URL en buffer
@@ -177,9 +180,9 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error("Erreur lors de l'envoi de l'email:", error);
     return NextResponse.json(
-      { 
+      {
         error: "Erreur lors de l'envoi de l'email",
-        details: error?.message || "Erreur inconnue"
+        details: error?.message || "Erreur inconnue",
       },
       { status: 500 },
     );
