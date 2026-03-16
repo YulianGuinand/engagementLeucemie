@@ -14,13 +14,15 @@ export async function POST(request: NextRequest) {
     }
 
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      // ignoreTLS: true,
+      host: process.env.MAIL_HOST || "smtp.gmail.com",
+      port: parseInt(process.env.MAIL_PORT || "587"),
+      secure: process.env.MAIL_PORT === "465", // true pour 465, false pour les autres (STARTTLS)
       auth: {
-        user: "spernelle@gmail.com",
-        pass: "xxao avww emnc rymx",
+        user: process.env.MAIL_USERNAME,
+        pass: process.env.MAIL_PASSWORD,
+      },
+      tls: {
+        rejectUnauthorized: false, // Souvent nécessaire pour Gmail selon l'environnement
       },
     });
 
@@ -150,15 +152,13 @@ export async function POST(request: NextRequest) {
 </html>
     `;
 
-    // Note importante pour le champ 'from' :
-    // FranceServ bloque généralement les envois si l'adresse 'from' n'est pas celle authentifiée
-    // ou un alias valide de votre domaine. Il est plus sûr d'utiliser l'email SMTP_USER.
     const senderEmail =
-      process.env.SMTP_USER || "no-reply@engagement-leucemie.com";
+      process.env.MAIL_FROM_ADDRESS || "no-reply@engagement-leucemie.com";
+    const senderName = process.env.MAIL_FROM_NAME || "Engagement Leucémie";
 
     // Envoyer l'email
     await transporter.sendMail({
-      from: `"Engagement Leucémie" <${senderEmail}>`,
+      from: `"${senderName}" <${senderEmail}>`,
       to: email,
       subject: `🎖️ Votre Certificat d'Engagement - ${
         pseudo || "Merci pour votre soutien"
