@@ -12,7 +12,7 @@ export default function Home() {
   const [nom, setNom] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [certificateDataUrl, setCertificateDataUrl] = useState<string | null>(
-    null
+    null,
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const previewRef = useRef<PreviewRef>(null);
@@ -44,7 +44,7 @@ export default function Home() {
     }
 
     setIsLoading(true);
-    setStatus("⏳ Génération du certificat en cours...");
+    setStatus("Génération du certificat en cours...");
 
     try {
       const wasHidden = !previewShow;
@@ -68,7 +68,7 @@ export default function Home() {
 
       setCertificateDataUrl(imageDataUrl);
 
-      setStatus("💾 Sauvegarde du certificat...");
+      setStatus("Sauvegarde du certificat...");
 
       let certificatePath = "";
       try {
@@ -86,24 +86,24 @@ export default function Home() {
         if (saveResponse.ok) {
           const saveData = await saveResponse.json();
           certificatePath = saveData.path;
-          console.log("Certificat sauvegardé avec le chemin:", certificatePath);
+          // console.log("Certificat sauvegardé avec le chemin:", certificatePath);
         } else {
-          console.error(
-            "Erreur réponse API save-certificate:",
-            await saveResponse.text()
-          );
+          // console.error(
+          //   "Erreur réponse API save-certificate:",
+          //   await saveResponse.text(),
+          // );
         }
       } catch (error) {
-        console.error("Erreur lors de la sauvegarde du certificat:", error);
+        // console.error("Erreur lors de la sauvegarde du certificat:", error);
       }
 
       if (!certificatePath) {
-        console.warn(
-          "⚠️ Aucun chemin de certificat - l'email sera envoyé sans lien de partage personnalisé"
-        );
+        // console.warn(
+        //   "Aucun chemin de certificat - l'email sera envoyé sans lien de partage personnalisé",
+        // );
       }
 
-      setStatus("📧 Envoi de l'email...");
+      setStatus("Envoi de l'email...");
 
       const response = await fetch("/api/send-certificate", {
         method: "POST",
@@ -119,15 +119,15 @@ export default function Home() {
       });
 
       if (response.ok) {
-        setStatus("✅ Certificat envoyé par email avec succès !");
+        setStatus("Certificat envoyé par email avec succès !");
         setTimeout(() => setStatus(null), 5000);
       } else {
-        setStatus("❌ Erreur lors de l'envoi");
+        setStatus("Erreur lors de l'envoi");
         setTimeout(() => setStatus(null), 3000);
       }
     } catch (error) {
-      console.error("Erreur:", error);
-      setStatus("❌ Erreur lors de l'envoi");
+      // console.error("Erreur:", error);
+      setStatus("Erreur lors de l'envoi");
       setTimeout(() => setStatus(null), 3000);
     } finally {
       setIsLoading(false);

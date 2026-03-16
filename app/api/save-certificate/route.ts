@@ -36,10 +36,10 @@ export async function POST(request: NextRequest) {
     if (!uploadResponse || uploadResponse.error) {
       const errorDetail =
         uploadResponse?.error?.message || "Réponse vide ou erreur inconnue";
-      console.error(
-        "Erreur UploadThing:",
-        uploadResponse?.error || "Réponse vide",
-      );
+      // console.error(
+      //   "Erreur UploadThing:",
+      //   uploadResponse?.error || "Réponse vide",
+      // );
       return NextResponse.json(
         {
           error: "Erreur lors de l'upload du certificat",
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
       filename: filename,
     });
   } catch (error) {
-    console.error("Erreur lors de la sauvegarde du certificat:", error);
+    // console.error("Erreur lors de la sauvegarde du certificat:", error);
     return NextResponse.json(
       { error: "Erreur lors de la sauvegarde du certificat" },
       { status: 500 },
