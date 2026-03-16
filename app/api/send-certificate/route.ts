@@ -174,10 +174,13 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erreur lors de l'envoi de l'email:", error);
     return NextResponse.json(
-      { error: "Erreur lors de l'envoi de l'email" },
+      { 
+        error: "Erreur lors de l'envoi de l'email",
+        details: error?.message || "Erreur inconnue"
+      },
       { status: 500 },
     );
   }

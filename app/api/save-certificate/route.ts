@@ -34,12 +34,17 @@ export async function POST(request: NextRequest) {
     const [uploadResponse] = await utapi.uploadFiles([file]);
 
     if (!uploadResponse || uploadResponse.error) {
+      const errorDetail =
+        uploadResponse?.error?.message || "Réponse vide ou erreur inconnue";
       console.error(
         "Erreur UploadThing:",
         uploadResponse?.error || "Réponse vide",
       );
       return NextResponse.json(
-        { error: "Erreur lors de l'upload du certificat" },
+        {
+          error: "Erreur lors de l'upload du certificat",
+          details: errorDetail,
+        },
         { status: 500 },
       );
     }
